@@ -10,6 +10,7 @@ pxcCHAR		g_status[512];
 /* Threading control */
 volatile bool g_stop = false;
 
+int g_tracking_map_flag = 0;
 BSObjectTracker::BSObjectTracker()
 {
 }
@@ -19,16 +20,27 @@ BSObjectTracker::~BSObjectTracker()
 {
 }
 
-void BSObjectTracker::startTracking()
+void BSObjectTracker::startTracking(int trackingMapFlag)
 {
 	BSController* controller = BSController::getInstance();
 	PXCSession* session = controller->session;
 
+	if (!g_targets.empty()) {
+		g_targets.clear();
+	}
 	// Load the map file
-	pxcCHAR	file[1024] = L"C:\\Users\\Avery Liu\\Desktop\\myPhone.slam";
-	g_targets.push_back(Model(file));
+	pxcCHAR	phoneFile[1024] = L"C:\\Users\\Avery Liu\\Desktop\\myPhone.slam";
+	pxcCHAR walletFile[1024] = L"C:\\Users\\Avery Liu\\Desktop\\myWallet.slam";
+	pxcCHAR keyFile[1024] = L"C:\\Users\\Avery Liu\\Desktop\\myBook.slam";
+	if (trackingMapFlag == 0)
+		g_targets.push_back(Model(phoneFile));
+	else if (trackingMapFlag == 1)
+		g_targets.push_back(Model(walletFile));
+	else if (trackingMapFlag == 2)
+		g_targets.push_back(Model(keyFile));
 
 	g_stop = false;
+	g_tracking_map_flag = trackingMapFlag;
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ObjectTrackingPipeline, (LPVOID)0, 0, 0);
 }
 
@@ -141,7 +153,14 @@ void ObjectTrackingPipeline()
 						iter->isTracking = true;
 						
 						BSSpeechSynthesis::OutputMessage msg;
-						msg.sentence = L"Items found.";
+						std::wcout << iter->friendlyName << std::endl;
+						
+						if (g_tracking_map_flag == 0)
+							msg.sentence = L"Phone found.";
+						else if (g_tracking_map_flag == 1)
+							msg.sentence = L"Wallet found";
+						else if (g_tracking_map_flag == 2)
+							msg.sentence = L"Book found";
 						speechSynthesis->pushQueue(msg);
 						printConsole(L"Items found.");
 

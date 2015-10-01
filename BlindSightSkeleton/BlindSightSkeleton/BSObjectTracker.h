@@ -7,7 +7,7 @@ class BSObjectTracker
 public:
 	BSObjectTracker();
 	~BSObjectTracker();
-	void startTracking();
+	void startTracking(int trackingMapFlag);
 	void stopTracking();
 };
 

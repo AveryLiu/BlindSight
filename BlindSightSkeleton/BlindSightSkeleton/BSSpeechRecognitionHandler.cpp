@@ -34,7 +34,7 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 		if (controller->getCamera()) {
 			msg.sentence = L"Camera setting up, finding the phone.";
 			// Setting up camera.
-			objectTracker->startTracking();
+			objectTracker->startTracking(0);
 		}
 		else {
 			msg.sentence = L"Camera occupied, please stop previous session first.";
@@ -108,6 +108,37 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 	case 7:
 	{
 		msg.sentence = L"I'm here! I'm here!";
+		speechSynthesis->pushQueue(msg);
+		break;
+	}
+	case 8:
+	{
+		// Detect the key
+		printConsole(L"Where's my Book");
+		if (controller->getCamera()) {
+			msg.sentence = L"Camera setting up, finding the Book.";
+			// Setting up camera.
+			objectTracker->startTracking(2);
+		}
+		else {
+			msg.sentence = L"Camera occupied, please stop previous session first.";
+		}
+		speechSynthesis->pushQueue(msg);
+		break;
+		
+	}
+	case 9:
+	{
+		// Detect the Wallet
+		printConsole(L"Where's my Wallet");
+		if (controller->getCamera()) {
+			msg.sentence = L"Camera setting up, finding the Wallet.";
+			// Setting up camera.
+			objectTracker->startTracking(1);
+		}
+		else {
+			msg.sentence = L"Camera occupied, please stop previous session first.";
+		}
 		speechSynthesis->pushQueue(msg);
 		break;
 	}
