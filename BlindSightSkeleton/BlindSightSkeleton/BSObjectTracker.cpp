@@ -161,6 +161,7 @@ void ObjectTrackingPipeline()
 	else
 	{
 		printConsole(L"Init Failed");
+		controller->releaseCamera();
 		stsFlag = false;
 	}
 

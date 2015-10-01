@@ -4,6 +4,17 @@
 #include "BSSpeechSynthesis.h"
 #include "BSFaceRecognitionHandler.h"
 #include "BSDistanceDetector.h"
+#include <ctime>
+
+pxcCHAR *CharToWChar(char *p)
+{
+	pxcCHAR *pwcsName;
+	int nChars = MultiByteToWideChar(CP_ACP, 0, p, -1, NULL, 0);
+	pwcsName = new pxcCHAR[nChars];
+	MultiByteToWideChar(CP_ACP, 0, p, -1, (LPWSTR)pwcsName, nChars);
+
+	return pwcsName;
+}
 
 /* This handler runs in a seperated thread*/
 void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition::RecognitionData* data)
@@ -19,9 +30,9 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 	switch (data->scores->label)
 	{
 	case 0:
-		printConsole(L"Where's my key");
+		printConsole(L"Where's my phone");
 		if (controller->getCamera()) {
-			msg.sentence = L"Camera setting up, finding the key.";
+			msg.sentence = L"Camera setting up, finding the phone.";
 			// Setting up camera.
 			objectTracker->startTracking();
 		}
@@ -73,6 +84,33 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 		}
 		speechSynthesis->pushQueue(msg);
 		break;
+	case 6:
+	{
+		time_t rawtime;
+		struct tm timeinfo;
+		char dateCharBuffer[80];
+		time(&rawtime);
+	
+		localtime_s(&timeinfo, &rawtime);
+
+		strftime(dateCharBuffer, 80, "It\'s %M past %H on december the third, 2015", &timeinfo);
+	
+		pxcCHAR *datePXCCharBuffer = CharToWChar(dateCharBuffer);
+
+		msg.sentence = datePXCCharBuffer;
+		speechSynthesis->pushQueue(msg);
+
+		// Sleep to avoid datePXCCharBuffer being deleted before used.
+		Sleep(2500);
+		delete datePXCCharBuffer;
+		break;
+	}
+	case 7:
+	{
+		msg.sentence = L"I'm here! I'm here!";
+		speechSynthesis->pushQueue(msg);
+		break;
+	}
 	default:
 		break;
 	}
@@ -87,3 +125,4 @@ BSSpeechRecognitionHandler::BSSpeechRecognitionHandler()
 BSSpeechRecognitionHandler::~BSSpeechRecognitionHandler()
 {
 }
+

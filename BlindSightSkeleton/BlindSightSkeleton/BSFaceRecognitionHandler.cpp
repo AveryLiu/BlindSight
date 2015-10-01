@@ -102,12 +102,9 @@ void recognitionPipeline()
 		return;
 	}
 
-
 	cfg->SetTrackingMode(PXCFaceConfiguration::FACE_MODE_COLOR_PLUS_DEPTH);
 	cfg->ApplyChanges();
 	sts = senseMgr->Init();
-
-
 
 	PXCFaceConfiguration::RecognitionConfiguration *rcfg = cfg->QueryRecognition();
 	if (rcfg == NULL)
@@ -154,7 +151,7 @@ void recognitionPipeline()
 					g_learning_stop = true;
 					
 					BSSpeechSynthesis::OutputMessage msg;
-					msg.sentence = L"Pokemon saved in pokedex.";
+					msg.sentence = L"Nice to meet you.";
 					speechSynthesis->pushQueue(msg);
 				}
 
@@ -198,10 +195,11 @@ void recognitionPipeline()
 				outfile.write(buffer, sizeof(buffer));
 			}
 		}
-
+			g_recognize_stop = false;
 			while (!g_recognize_stop) {
-				if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR)
-					break;
+				for (int i = 0; i < 100; i++)
+					if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR)
+						break;
 
 				fdata->Update();
 
@@ -218,7 +216,7 @@ void recognitionPipeline()
 					if (uid >= 0) {
 						// do something with the recognized user.
 						BSSpeechSynthesis::OutputMessage msg;
-						msg.sentence = L"A wild pokemon appeared.";
+						msg.sentence = L"Person found.";
 						speechSynthesis->pushQueue(msg);
 						printConsole(L"Gotta catch em all.");
 						Sleep(2500);
@@ -230,6 +228,7 @@ void recognitionPipeline()
 	else
 	{
 		printConsole(L"Init Failed");
+		controller->releaseCamera();
 		stsFlag = false;
 	}
 

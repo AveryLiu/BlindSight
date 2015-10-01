@@ -41,8 +41,8 @@ void BSController::initializeAudio()
 
 	// Set command and control
 	// TODO: load the commands from files.
-	pxcCHAR *cmds[6] = { L"Where's my key", L"Stop", L"What is the weather", L"Recognize face", L"Glasses, meet Marcio", L"Activate distance detection"};
-	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 6);
+	pxcCHAR *cmds[8] = { L"Glasses, Where's my phone", L"stop", L"Glasses, what is the weather", L"Glasses, recognize face", L"Glasses, meet person", L"Glasses£¬ activate distance detection", L"Glasses, what time is it", L"Glasses, where are you"};
+	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 8);
 	speechRecognition->SetGrammar(1);
 }
 

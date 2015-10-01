@@ -137,6 +137,7 @@ void DistanceDetectorPipeline()
 	}
 	else
 	{
+		controller->releaseCamera();
 		printConsole(L"Init Failed");
 		stsFlag = false;
 	}
