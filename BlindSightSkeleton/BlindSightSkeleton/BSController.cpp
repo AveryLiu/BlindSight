@@ -1,6 +1,7 @@
 #include "BSController.h"
 #include <iostream>
 #include "main.h"
+#include "BSFaceRecognitionHandler.h"
 
 BSController* BSController::_controller;
 
@@ -40,8 +41,8 @@ void BSController::initializeAudio()
 
 	// Set command and control
 	// TODO: load the commands from files.
-	pxcCHAR *cmds[3] = { L"Where's my key", L"Stop", L"What is the weather" };
-	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 3);
+	pxcCHAR *cmds[5] = { L"Where's my key", L"Stop", L"What is the weather", L"Recognize face", L"Glasses, meet Marcio"};
+	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 5);
 	speechRecognition->SetGrammar(1);
 }
 
@@ -60,7 +61,7 @@ BSController * BSController::getInstance()
 
 void BSController::initialize()
 {
-	
+
 	initializeAudio();
 	initializeCamera();
 
@@ -98,7 +99,7 @@ BSController::BSController()
 		return;
 	}
 
-	session->CreateImpl <PXCSpeechRecognition> (&speechRecognition);
+	session->CreateImpl <PXCSpeechRecognition>(&speechRecognition);
 	if (!speechRecognition) {
 		printConsole(L"Failed to create speech recognition module");
 		return;
@@ -107,6 +108,7 @@ BSController::BSController()
 	// Init speech synthesis
 	speechSynthesis = new BSSpeechSynthesis();
 	objectTracker = new BSObjectTracker();
+	faceRecognitionHandler = new BSFaceRecognitionHandler();
 }
 
 BSController::~BSController()

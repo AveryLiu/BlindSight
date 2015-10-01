@@ -2,6 +2,7 @@
 #include "BSObjectTracker.h"
 #include "BSSpeechRecognitionHandler.h"
 #include "BSSpeechSynthesis.h"
+#include "BSFaceRecognitionHandler.h"
 #include <pxcspeechrecognition.h>
 #include <pxcsensemanager.h>
 #include <Windows.h>
@@ -16,7 +17,7 @@ class BSController
 public:
 	// Singleton pattern
 	static BSController* getInstance();
-	
+
 	void initialize();
 	void startController();
 	void stopController();
@@ -33,6 +34,7 @@ public:
 
 	BSObjectTracker* objectTracker;
 	BSSpeechSynthesis* speechSynthesis;
+	BSFaceRecognitionHandler* faceRecognitionHandler;
 protected:
 	BSController();
 	~BSController();

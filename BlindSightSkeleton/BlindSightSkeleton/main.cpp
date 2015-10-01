@@ -23,7 +23,7 @@ int main(int argc, const char *argv[])
 	bool mainThreadIsRunning = true;
 	printWelcomeInfo();
 
-	printConsole(L"\nInitializing");
+	printConsole(L"\nIni1tializing");
 	BSController* controller = BSController::getInstance();
 	controller->initialize();
 

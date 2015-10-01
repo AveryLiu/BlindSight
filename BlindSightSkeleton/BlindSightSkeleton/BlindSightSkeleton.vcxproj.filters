@@ -30,6 +30,9 @@
     <ClCompile Include="BSSpeechSynthesis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BSFaceRecognitionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BSObjectTracker.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VoiceOut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BSFaceRecognitionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
