@@ -93,7 +93,7 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 	
 		localtime_s(&timeinfo, &rawtime);
 
-		strftime(dateCharBuffer, 80, "It\'s %M past %H on december the third, 2015", &timeinfo);
+		strftime(dateCharBuffer, 80, "It\'s %M past %H on december the fifth, 2015", &timeinfo);
 	
 		pxcCHAR *datePXCCharBuffer = CharToWChar(dateCharBuffer);
 

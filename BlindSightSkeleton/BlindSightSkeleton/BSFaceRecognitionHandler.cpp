@@ -14,7 +14,6 @@ BSFaceRecognitionHandler::BSFaceRecognitionHandler()
 {
 }
 
-
 BSFaceRecognitionHandler::~BSFaceRecognitionHandler()
 {
 }
@@ -107,21 +106,29 @@ void recognitionPipeline()
 	sts = senseMgr->Init();
 
 	PXCFaceConfiguration::RecognitionConfiguration *rcfg = cfg->QueryRecognition();
+
 	if (rcfg == NULL)
 	{
-	printConsole(L"Failed to Query Recognition Configuration instance\n");
-	return;
+	    printConsole(L"Failed to Query Recognition Configuration instance\n");
+	    return;
 	} // Difference with sdk code
+	
 	// Enable face recognition
 	rcfg->Enable(); // Is it necessary to call this function before creating/loading a database?
 
+	PXCFaceConfiguration::RecognitionConfiguration::RecognitionStorageDesc desc = {};
+	desc.maxUsers = 10;
+	if (!g_learning_stop)
+		rcfg->CreateStorage(L"MyDB", &desc);
+	rcfg->UseStorage(L"MyDB");
+
 	// Make it effective
 	cfg->QueryRecognition()->SetRegistrationMode(PXCFaceConfiguration::RecognitionConfiguration::REGISTRATION_MODE_CONTINUOUS);
-
+	
 	cfg->ApplyChanges();
 
-
 	PXCFaceData *fdata = faceModule->CreateOutput();
+
 	if (fdata == NULL) {
 		printConsole(L"No FaceData found.");
 		return;
@@ -130,6 +137,7 @@ void recognitionPipeline()
 	if (sts >= PXC_STATUS_NO_ERROR)
 	{
 		printConsole(L"Streaming");
+
 		// Check if both flags are false, in which case something is wrong
 		/*if (!g_learning_stop & !g_recognize_stop)
 		{
@@ -138,100 +146,113 @@ void recognitionPipeline()
 			printConsole(L"Learning and recognition cannot be done at the same time. Stopped both processes.");
 		}*/
 
-			// configure for learning
+		// configure for learning
+		char databaseName[20] = "database.dat";
+
 		while (!g_learning_stop) {
-			if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR)
+			
+			if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR) {
+				printConsole(L"AcquireFrame failed");
 				break;
+			}
+				
 			fdata->Update();
 			pxcI32 nfaces = fdata->QueryNumberOfDetectedFaces();
 
 			if (nfaces > 0) {
-				if (fdata->QueryFaceByIndex(0)) {
-					fdata->QueryFaceByIndex(0)->QueryRecognition()->RegisterUser();
-					g_learning_stop = true;
-					
-					BSSpeechSynthesis::OutputMessage msg;
-					msg.sentence = L"Nice to meet you.";
-					speechSynthesis->pushQueue(msg);
-				}
+				for (int i = 0; i < nfaces; i++) {
+					if (fdata->QueryFaceByIndex(0)) {
+						fdata->QueryFaceByIndex(0)->QueryRecognition()->RegisterUser();
 
-			}
-			senseMgr->ReleaseFrame();
-		}
-		
-		uifstream infile;
-		char databaseName[20] = "database.dat";
-		infile.open(databaseName, std::ios::binary | std::ios::in);
-		if (infile.good()) {
-			//TODO - load database into buffer file, obtain size; see below / example 76
-			//pxcI32 nbytes = rmd->QueryDatabaseSize();
-			//pxcBYTE *buffer = new pxcBYTE[nbytes];
-			// Load the database buffer back.
-			//rcfg->SetDatabaseBuffer(buffer, nbytes);
-		}
-
-		else { //no database present
-			   // Create a recognition database
-			PXCFaceConfiguration::RecognitionConfiguration::RecognitionStorageDesc desc = {};
-			desc.maxUsers = 10;
-			rcfg->CreateStorage(L"MyDB", &desc);
-			rcfg->UseStorage(L"MyDB");
-
-
-			//TODO - save and close database: example 76
-			if (fdata != NULL) {
-				// allocate the buffer to save the database
-				PXCFaceData::RecognitionModuleData *rmd = fdata->QueryRecognitionModule();
-				pxcI32 nbytes = rmd->QueryDatabaseSize();
-				pxcBYTE *buffer = new pxcBYTE[nbytes];
-
-				// retrieve the database buffer
-				rmd->QueryDatabaseBuffer(buffer);
-
-				// TODO - Save the buffer to a file. Apply industry standard encryption to protect privacy.
-				uofstream outfile;
-				outfile.open(databaseName, std::ios::binary | std::ios::out);
-				outfile.write(reinterpret_cast<const unsigned char *>(&nbytes), sizeof(nbytes));
-				outfile.write(buffer, sizeof(buffer));
-			}
-		}
-			g_recognize_stop = false;
-			while (!g_recognize_stop) {
-				for (int i = 0; i < 100; i++)
-					if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR)
-						break;
-
-				fdata->Update();
-
-				// fdata is a PXCFaceData instance
-				pxcI32 nfaces = fdata->QueryNumberOfDetectedFaces();
-				printf("%d\n", nfaces);
-				for (pxcI32 i = 0; i < nfaces; i++) {
-					// Retrieve the recognition data instance
-					PXCFaceData::Face *face = fdata->QueryFaceByIndex(i);
-					PXCFaceData::RecognitionData *rdata = face->QueryRecognition();
-
-					// recognize the current face?
-					pxcI32 uid = rdata->QueryUserID();
-					if (uid >= 0) {
-						// do something with the recognized user.
 						BSSpeechSynthesis::OutputMessage msg;
-						msg.sentence = L"Person found.";
+						msg.sentence = L"Nice to meet you.";
 						speechSynthesis->pushQueue(msg);
-						printConsole(L"Gotta catch em all.");
-						Sleep(2500);
 					}
 				}
-				senseMgr->ReleaseFrame();
+
+				// Save the database
+				if (fdata != NULL) {
+					// allocate the buffer to save the database
+					PXCFaceData::RecognitionModuleData *rmd = fdata->QueryRecognitionModule();
+					pxcI32 nbytes = rmd->QueryDatabaseSize();
+					pxcBYTE *buffer = new pxcBYTE[nbytes];
+					
+					// retrieve the database buffer
+					rmd->QueryDatabaseBuffer(buffer);
+
+					// TODO - Save the buffer to a file. Apply industry standard encryption to protect privacy.
+					uofstream outfile;
+					outfile.open(databaseName, std::ios::binary | std::ios::out);
+					outfile.write(reinterpret_cast<const unsigned char *>(&nbytes), sizeof(nbytes));
+					outfile.write(reinterpret_cast<const unsigned char *>(buffer), nbytes);
+				}
 			}
+			senseMgr->ReleaseFrame();	
+		}
+		g_recognize_stop = false;
+		if (!g_recognize_stop)
+		{
+			uifstream infile;
+			infile.open(databaseName, std::ios::binary | std::ios::in);
+			if (infile.good()) {
+				// TODO - load database into buffer file, obtain size; see below / example 76
+				PXCFaceData::RecognitionModuleData *rmd = fdata->QueryRecognitionModule();
+				pxcI32 nbytes;
+				infile.read(reinterpret_cast<unsigned char *>(&nbytes), sizeof(int));
+
+				pxcBYTE *buffer = new pxcBYTE[nbytes];
+				infile.read(reinterpret_cast<unsigned char *>(buffer), nbytes);
+				// Load the database buffer back.
+				rmd->QueryDatabaseBuffer(buffer);
+				rcfg->SetDatabaseBuffer(buffer, nbytes);
+				rcfg->UseStorage(L"MyDB");
+				cfg->ApplyChanges();
+			}
+		}
+
+		while (!g_recognize_stop) {
+				
+			if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR)
+			{
+				BSSpeechSynthesis::OutputMessage msg;
+				printConsole(L"Acquire Frame Error");	
+				break;
+			}
+
+			fdata->Update();
+
+			// fdata is a PXCFaceData instance
+			pxcI32 nfaces = fdata->QueryNumberOfDetectedFaces();
+			
+			for (pxcI32 i = 0; i < nfaces; i++) {
+				// Retrieve the recognition data instance
+				PXCFaceData::Face *face = fdata->QueryFaceByIndex(i);
+				PXCFaceData::RecognitionData *rdata = face->QueryRecognition();
+
+				// recognize the current face?
+				pxcI32 uid = rdata->QueryUserID();
+				if (uid >= 0) {
+					std::cout << uid << std::endl;
+					// do something with the recognized user.
+					BSSpeechSynthesis::OutputMessage msg;
+					msg.sentence = L"Person found.";
+					speechSynthesis->pushQueue(msg);
+					printConsole(L"Gotta catch em all.");
+					
+					Sleep(2500);
+				}
+			}
+			senseMgr->ReleaseFrame();			
+		}
 	}
+	
 	else
 	{
 		printConsole(L"Init Failed");
-		controller->releaseCamera();
 		stsFlag = false;
 	}
 
+	controller->releaseCamera();
 	cfg->Release();
 	senseMgr->Close();
 	senseMgr->Release();
