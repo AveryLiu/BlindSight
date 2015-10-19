@@ -30,9 +30,6 @@
     <ClCompile Include="BSController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BSState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BSSpeechRecognizer.h">
@@ -45,9 +42,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BSController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BSState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

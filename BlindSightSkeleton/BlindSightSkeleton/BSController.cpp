@@ -2,26 +2,32 @@
 
 
 
-BSController::BSController()
-{
-}
-
-
-BSController::~BSController()
-{
-}
-
 void BSController::initialize()
 {
 	return;
 }
 
-void BSController::startBlindSight()
+void BSController::startController()
+{
+	CreateThread(
+		NULL,
+		0,(LPTHREAD_START_ROUTINE)RecThread,
+		NULL,
+		0,NULL);
+	return;
+}
+
+void BSController::stopController()
 {
 	return;
 }
 
-void BSController::stopBlindSight()
+BSController::BSController()
 {
-	return;
+}
+
+DWORD WINAPI RecThread()
+{
+	
+	return 0;
 }
