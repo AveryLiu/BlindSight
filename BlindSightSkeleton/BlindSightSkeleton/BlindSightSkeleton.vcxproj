@@ -133,6 +133,7 @@
     <ClInclude Include="BSObjectTracker.h" />
     <ClInclude Include="BSSpeechRecognizer.h" />
     <ClInclude Include="BSSpeechSythesis.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

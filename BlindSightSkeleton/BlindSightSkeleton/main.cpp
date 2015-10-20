@@ -1,39 +1,37 @@
 #include <iostream>
 #include "BSController.h"
 
-void printConsole(char *info)
+void printConsole(pxcCHAR *info)
 {
-   std::cout << info << std::endl;
+   std::wcout << info << std::endl;
 }
 
 void printWelcomeInfo()
 {
-	printConsole("#### BlindSight Beta Verison ####");
-	printConsole("Created by team BlindSight");
-	printConsole("Initializing...");
+	printConsole(L"#### BlindSight Beta Verison ####");
+	printConsole(L"Created by team BlindSight");
 }
 
 void printMenu()
 {
-	printConsole("0. List device info");
-	printConsole("1. Terminate");
+	printConsole(L"0. List device info");
+	printConsole(L"1. Terminate");
 }
 
 int main(int argc, const char *argv[])
 {
 	char choice;
-	bool isRunning = true;
+	bool mainThreadIsRunning = true;
 	printWelcomeInfo();
 
+	printConsole(L"Initializing");
 	BSController& controller = BSController::getInstance();
-	controller.a = "23";
-	BSController& controller2 = BSController::getInstance();
-	printConsole(controller2.a);
-	//controller->initialize();
+	controller.initialize();
 
-	printConsole("Starting the BlindSight controller...");
-	//controller->startController();
-	while (isRunning)
+	printConsole(L"Starting the BlindSight controller");
+	controller.startController();
+
+	while (mainThreadIsRunning)
 	{
 		printMenu();
 		std::cin >> choice;
@@ -42,9 +40,9 @@ int main(int argc, const char *argv[])
 		case '0':
 			break;
 		case '1':
-			isRunning = false;
+			mainThreadIsRunning = false;
 		default:
-			printConsole("operation wasn't proceessed.");
+			printConsole(L"operation wasn't proceessed.");
 			break;
 		}
 	}
