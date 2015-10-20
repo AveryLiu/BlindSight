@@ -25,11 +25,11 @@ int main(int argc, const char *argv[])
 	printWelcomeInfo();
 
 	printConsole(L"Initializing");
-	BSController& controller = BSController::getInstance();
-	controller.initialize();
+	BSController* controller = BSController::getInstance();
+	controller->initialize();
 
 	printConsole(L"Starting the BlindSight controller");
-	controller.startController();
+	controller->startController();
 
 	while (mainThreadIsRunning)
 	{
@@ -47,6 +47,6 @@ int main(int argc, const char *argv[])
 		}
 	}
 	
-//	controller->stopController();
+	controller->stopController();
 	return 0;
 }

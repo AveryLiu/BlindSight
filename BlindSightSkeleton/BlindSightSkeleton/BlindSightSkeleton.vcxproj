@@ -134,6 +134,7 @@
     <ClInclude Include="BSSpeechRecognitionHandler.h" />
     <ClInclude Include="BSSpeechSynthesis.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="VoiceOut.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -47,5 +47,8 @@
     <ClInclude Include="BSSpeechSynthesis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VoiceOut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

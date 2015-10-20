@@ -2,6 +2,8 @@
 #include <iostream>
 #include "main.h"
 
+BSController* BSController::_controller;
+
 void BSController::initializeAudio()
 {
 	// Select the audio device
@@ -49,6 +51,14 @@ void BSController::initializeCamera()
 	;
 }
 
+BSController * BSController::getInstance()
+{
+	if (BSController::_controller == NULL) {
+		BSController::_controller = new BSController();
+	}
+	return BSController::_controller;
+}
+
 void BSController::initialize()
 {
 	
@@ -60,6 +70,9 @@ void BSController::initialize()
 
 void BSController::startController()
 {
+	// Start running speech synthesis in a seperate thread
+	speechSynthesis->start();
+	// Start running speech recognintion in a seperate thread
 	speechRecognition->StartRec(source, &speechRecognitionHandler);
 }
 
@@ -70,6 +83,10 @@ void BSController::stopController()
 
 BSController::BSController()
 {
+	// Init critical section
+	InitializeCriticalSection(&getCameraLock);
+	InitializeCriticalSection(&releaseCameraLock);
+
 	session = PXCSession::CreateInstance();
 	if (!session) {
 		printConsole(L"Failed to create session");
@@ -88,6 +105,8 @@ BSController::BSController()
 		return;
 	}
 
+	// Init speech synthesis
+	speechSynthesis = new BSSpeechSynthesis();
 }
 
 BSController::~BSController()
@@ -97,25 +116,25 @@ BSController::~BSController()
 
 int BSController::getCamera()
 {
-	EnterCriticalSection(getCameraLock);
+	EnterCriticalSection(&getCameraLock);
 	int result = 0;
 	if (lock_camera == 1) {
 		lock_camera--;
 		result = 1;
 	}
-	LeaveCriticalSection(getCameraLock);
+	LeaveCriticalSection(&getCameraLock);
 	return result;
 }
 
 int BSController::releaseCamera()
 {
-	EnterCriticalSection(realseCameraLock);
+	EnterCriticalSection(&releaseCameraLock);
 	int result = 0;
 	if (lock_camera == 0) {
 		lock_camera++;
 		result = 1;
 	}
-	LeaveCriticalSection(realseCameraLock);
+	LeaveCriticalSection(&releaseCameraLock);
 	return result;
 }
 

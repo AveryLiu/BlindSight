@@ -12,18 +12,11 @@ class BSSpeechSynthesis;
 // Macros
 #define MAX_AUDIO_DEVICES 5
 
-// Recoginizing work in this thread
-DWORD WINAPI RecThread();
-
-
 class BSController
 {
 public:
 	// Singleton pattern
-	static BSController& getInstance() {
-		static BSController controller;
-		return controller;
-	}
+	static BSController* getInstance();
 	
 	void initialize();
 	void startController();
@@ -35,23 +28,26 @@ public:
 	PXCSpeechRecognition *speechRecognition;
 	PXCSpeechRecognition::ProfileInfo pinfo;
 
+	int getCamera();
+	int releaseCamera();
+
+	BSSpeechSynthesis* speechSynthesis;
 protected:
 	BSController();
 	~BSController();
 
 private:
+	static BSController* _controller;
+
 	// Camera management operations
-	LPCRITICAL_SECTION getCameraLock;
-	LPCRITICAL_SECTION realseCameraLock;
+	CRITICAL_SECTION getCameraLock;
+	CRITICAL_SECTION releaseCameraLock;
 	int lock_camera = 1;
-	int getCamera();
-	int releaseCamera();
 
 	void initializeAudio();
 	void initializeCamera();
 
 	BSObjectTracker objectTracker;
-	BSSpeechSynthesis* speechSynthesis;
 	BSSpeechRecognitionHandler speechRecognitionHandler;
 };
 
