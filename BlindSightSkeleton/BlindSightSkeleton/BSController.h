@@ -1,18 +1,20 @@
+#pragma once
 #include "BSObjectTracker.h"
-#include "BSSpeechRecognizer.h"
-#include "BSSpeechSythesis.h"
 #include "BSSpeechRecognitionHandler.h"
+#include "BSSpeechSynthesis.h"
 #include <pxcspeechrecognition.h>
 #include <pxcsensemanager.h>
 #include <Windows.h>
 #include <queue>
 #include <map>
 
+class BSSpeechSynthesis;
 // Macros
 #define MAX_AUDIO_DEVICES 5
 
 // Recoginizing work in this thread
 DWORD WINAPI RecThread();
+
 
 class BSController
 {
@@ -49,7 +51,7 @@ private:
 	void initializeCamera();
 
 	BSObjectTracker objectTracker;
-	BSSpeechSythesis speechSythesis;
+	BSSpeechSynthesis* speechSynthesis;
 	BSSpeechRecognitionHandler speechRecognitionHandler;
 };
 
