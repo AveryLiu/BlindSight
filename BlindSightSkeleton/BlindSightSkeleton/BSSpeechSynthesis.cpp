@@ -1,5 +1,6 @@
 #include "BSSpeechSynthesis.h"
 #include "VoiceOut.h"
+#include "BSController.h"
 
 
 BSSpeechSynthesis::BSSpeechSynthesis()
@@ -23,8 +24,8 @@ void BSSpeechSynthesis::pushQueue(OutputMessage outMsg)
 
 BSSpeechSynthesis::OutputMessage BSSpeechSynthesis::getItemFromQueue() 
 {
-	OutputMessage msg;
 	EnterCriticalSection(&queue_lock);
+	OutputMessage msg;
 	if (!this->outQueue.empty()) {
 		msg = outQueue.front();
 		outQueue.pop();
@@ -81,23 +82,36 @@ void BSSpeechSynthesis::isRunning()
 	;
 }
 
+/* Output auido to the user. Runs in a seperated thread*/
 DWORD WINAPI::synthesisThread()
 {
 	BSController* controller = BSController::getInstance();
 	BSSpeechSynthesis* speechSynthesis = controller->speechSynthesis;
+	BSObjectTracker* objectTracker = controller->objectTracker;
 
 	while (true) {
 		BSSpeechSynthesis::OutputMessage msg = speechSynthesis->getItemFromQueue();
-		if (msg.msgID == 0) break; 
+		if (msg.msgID == 0) {
+			if (controller->tryGetCamera()) {
+				speechSynthesis->speakAloud(L"Camera not in use.");
+			}
+			else {
+				speechSynthesis->speakAloud(L"Camera closing.");
+				controller->releaseCamera();
+				// closing camera here
+				objectTracker->stopTracking();
+				speechSynthesis->speakAloud(L"Camera closed.");
+			}
+			
+		}
 		if (msg.sentence != NULL) {
 			printConsole(msg.sentence);
 			speechSynthesis->speakAloud(msg.sentence);
 		}
 		else
 		{
-			printConsole(L"Message hasn't been received.");
+			;
 		}
-	
 	}
 	return 0;
 }

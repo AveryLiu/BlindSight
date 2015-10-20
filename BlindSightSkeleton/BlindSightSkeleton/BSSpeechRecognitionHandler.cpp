@@ -8,12 +8,22 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 {
 	BSController* controller = BSController::getInstance();
 	BSSpeechSynthesis* speechSynthesis = controller->speechSynthesis;
+	BSObjectTracker* objectTracker = controller->objectTracker;
 	BSSpeechSynthesis::OutputMessage msg;
 
 	switch (data->scores->label)
 	{
 	case 0:
-		printConsole(L"Find my key");
+		printConsole(L"Where's my key");
+		if (controller->getCamera()) {
+			msg.sentence = L"Camera setting up, finding the key.";
+			// Setting up camera.
+			objectTracker->startTracking();
+		}
+		else {
+			msg.sentence = L"Camera occupied, please stop previous session first.";
+		}
+		speechSynthesis->pushQueue(msg);
 		break;
 	case 1:
 		msg.msgID = 0;

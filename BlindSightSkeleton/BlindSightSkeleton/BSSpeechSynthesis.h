@@ -1,11 +1,8 @@
 #pragma once
 #include <iostream>
-#include "BSController.h"
 #include <pxcspeechsynthesis.h>
 #include <queue>
 #include <Windows.h>
-
-class BSController;
 
 
 

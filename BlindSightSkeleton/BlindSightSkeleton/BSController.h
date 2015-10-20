@@ -8,7 +8,6 @@
 #include <queue>
 #include <map>
 
-class BSSpeechSynthesis;
 // Macros
 #define MAX_AUDIO_DEVICES 5
 
@@ -22,15 +21,17 @@ public:
 	void startController();
 	void stopController();
 
-	// Properities related to the SDK
+	// Properities from SDK
 	PXCSession *session;
 	PXCAudioSource *source;
 	PXCSpeechRecognition *speechRecognition;
 	PXCSpeechRecognition::ProfileInfo pinfo;
 
 	int getCamera();
+	int tryGetCamera();
 	int releaseCamera();
 
+	BSObjectTracker* objectTracker;
 	BSSpeechSynthesis* speechSynthesis;
 protected:
 	BSController();
@@ -47,7 +48,6 @@ private:
 	void initializeAudio();
 	void initializeCamera();
 
-	BSObjectTracker objectTracker;
 	BSSpeechRecognitionHandler speechRecognitionHandler;
 };
 

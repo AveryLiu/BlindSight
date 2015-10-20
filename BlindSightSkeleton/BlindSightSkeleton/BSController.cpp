@@ -13,7 +13,6 @@ void BSController::initializeAudio()
 		printConsole(L"Audio devices exceed the maximun supported number.");
 		return;
 	}
-
 	PXCAudioSource::DeviceInfo dinfo[MAX_AUDIO_DEVICES] = { 0 };
 
 	printConsole(L"\nGathering audio devices information");
@@ -41,7 +40,7 @@ void BSController::initializeAudio()
 
 	// Set command and control
 	// TODO: load the commands from files.
-	pxcCHAR *cmds[3] = { L"Find my key", L"Stop", L"What is the weather" };
+	pxcCHAR *cmds[3] = { L"Where's my key", L"Stop", L"What is the weather" };
 	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 3);
 	speechRecognition->SetGrammar(1);
 }
@@ -65,14 +64,14 @@ void BSController::initialize()
 	initializeAudio();
 	initializeCamera();
 
-	// Load the 3D tracking map file
+	// Load 3D tracking map file
 }
 
 void BSController::startController()
 {
-	// Start running speech synthesis in a seperate thread
+	// Start synthesis thread
 	speechSynthesis->start();
-	// Start running speech recognintion in a seperate thread
+	// Start recognintion thread
 	speechRecognition->StartRec(source, &speechRecognitionHandler);
 }
 
@@ -107,6 +106,7 @@ BSController::BSController()
 
 	// Init speech synthesis
 	speechSynthesis = new BSSpeechSynthesis();
+	objectTracker = new BSObjectTracker();
 }
 
 BSController::~BSController()
@@ -124,6 +124,11 @@ int BSController::getCamera()
 	}
 	LeaveCriticalSection(&getCameraLock);
 	return result;
+}
+
+int BSController::tryGetCamera()
+{
+	return lock_camera;
 }
 
 int BSController::releaseCamera()
