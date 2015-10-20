@@ -2,7 +2,6 @@
 #include <iostream>
 #include "BSController.h"
 #include <pxcspeechsynthesis.h>
-#include "VoiceOut.h"
 #include <queue>
 #include <Windows.h>
 
@@ -29,7 +28,7 @@ public:
 	void stop();
 	void pushQueue(OutputMessage outMsg);
 	OutputMessage getItemFromQueue();
-	void speakAloud(pxcCHAR* sentense);
+	void speakAloud(pxcCHAR* sentence);
 
 private:
 	CRITICAL_SECTION queue_lock;

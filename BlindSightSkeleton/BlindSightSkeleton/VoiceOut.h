@@ -1,8 +1,7 @@
 #pragma once
-#include <Windows.h>
+#include <pxcspeechsynthesis.h>
 #include <vector>
-#include "pxcspeechsynthesis.h"
-
+#include <Windows.h>
 class VoiceOut {
 protected:
 
@@ -68,35 +67,6 @@ public:
 		audio->ReleaseAccess(&data);
 	}
 
-	void SaveFile(const wchar_t* fname)
-	{
-		FILE* file = NULL;
-		_wfopen_s(&file, fname, L"wb");
-
-		if (!file) return;
-
-		int len = (int)m_wavefile.size();
-		// These first 44 bytes are the header of a regular old
-		// RIFF WAV PCM audio file
-		fwrite("RIFF", 1, 4, file);                                       // [0,3] - Chunk ID 
-		int chunkSize = len + 36; fwrite(&chunkSize, 4, 1, file);                // [4, 7] - Chunk size:  = 36 + Subchunk2size
-		fwrite("WAVE", 1, 4, file);                                       // [8,11] - Format 
-		fwrite("fmt ", 1, 4, file);                                       // [12,15] - Subchunk1 ID 
-		int subchunk1 = 16; fwrite(&subchunk1, 4, 1, file);                    // [16, 19] - Subchunk1 size:  = 16 for PCM
-		short audioFormat = 1; fwrite(&audioFormat, 2, 1, file);               // [20, 21] - AudioFormat: PCM = 1
-		fwrite(&m_wfx.nChannels, 2, 1, file);                                // [22, 23] - Number of channels
-		fwrite(&m_wfx.nSamplesPerSec, 4, 1, file);                           // [24, 27] - SampeRate
-		fwrite(&m_wfx.nAvgBytesPerSec, 4, 1, file);                          // [28, 31] - ByteRate: 16 is the numbers of bits per sample
-		fwrite(&m_wfx.nBlockAlign, 2, 1, file);                              // [32, 33] - BlockAlign: 16 is the numbers of bits per sample
-		short bitsPerSample = 16; fwrite(&bitsPerSample, 2, 1, file);          // [34, 35] - BitsPerSample
-		fwrite("data", sizeof(unsigned char), 4, file);                   // [36,39] - Subchunk2 (data chunk) ID
-		fwrite(&len, 4, 1, file);                                            // [40, 43]:  number of bytes of the data
-
-																			 // The actual audio data goes next
-		fwrite(&m_wavefile[0], 1, len, file);
-
-		fclose(file);
-	}
 
 	~VoiceOut(void) {
 		if (!m_hwo || m_nsamples <= 0) return;
@@ -111,3 +81,4 @@ public:
 		waveOutClose(m_hwo);
 	}
 };
+

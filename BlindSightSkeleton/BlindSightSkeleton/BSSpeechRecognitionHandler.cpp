@@ -4,11 +4,12 @@
 #include "BSSpeechSynthesis.h"
 
 /* This handler runs in a seperated thread*/
-void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition::RecognitionData * data)
+void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition::RecognitionData* data)
 {
 	BSController* controller = BSController::getInstance();
 	BSSpeechSynthesis* speechSynthesis = controller->speechSynthesis;
 	BSSpeechSynthesis::OutputMessage msg;
+
 	switch (data->scores->label)
 	{
 	case 0:

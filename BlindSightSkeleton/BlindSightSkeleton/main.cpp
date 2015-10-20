@@ -14,7 +14,6 @@ void printWelcomeInfo()
 
 void printMenu()
 {
-	printConsole(L"0. List device info");
 	printConsole(L"1. Terminate");
 }
 
@@ -24,7 +23,7 @@ int main(int argc, const char *argv[])
 	bool mainThreadIsRunning = true;
 	printWelcomeInfo();
 
-	printConsole(L"Initializing");
+	printConsole(L"\nInitializing");
 	BSController* controller = BSController::getInstance();
 	controller->initialize();
 
@@ -48,5 +47,6 @@ int main(int argc, const char *argv[])
 	}
 	
 	controller->stopController();
+
 	return 0;
 }
