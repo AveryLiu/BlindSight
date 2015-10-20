@@ -1,6 +1,7 @@
 #include "BSObjectTracker.h"
 #include "BSSpeechRecognizer.h"
 #include "BSSpeechSythesis.h"
+#include "BSSpeechRecognitionHandler.h"
 #include <pxcspeechrecognition.h>
 #include <pxcsensemanager.h>
 #include <Windows.h>
@@ -49,6 +50,7 @@ private:
 
 	BSObjectTracker objectTracker;
 	BSSpeechSythesis speechSythesis;
+	BSSpeechRecognitionHandler speechRecognitionHandler;
 };
 
 

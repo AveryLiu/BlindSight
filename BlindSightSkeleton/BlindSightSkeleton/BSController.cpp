@@ -60,7 +60,7 @@ void BSController::initialize()
 
 void BSController::startController()
 {
-    
+	speechRecognition->StartRec(source, &speechRecognitionHandler);
 }
 
 void BSController::stopController()
