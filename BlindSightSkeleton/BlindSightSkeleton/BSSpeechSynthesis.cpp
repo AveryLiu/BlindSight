@@ -35,40 +35,35 @@ BSSpeechSynthesis::OutputMessage BSSpeechSynthesis::getItemFromQueue()
 
 void BSSpeechSynthesis::speakAloud(pxcCHAR * sentence)
 {
-	
 	BSController *controller = BSController::getInstance();
 	PXCSession *session = controller->session;
 
-	//Create an instance of the PXCSpeechSynthesis
-	PXCSpeechSynthesis *tts = 0;
-	pxcStatus sts = session->CreateImpl<PXCSpeechSynthesis>(&tts);
-	if (sts != pxcStatus::PXC_STATUS_NO_ERROR) {
-		wprintf_s(L"Failed to create an instance of the PXCSpeechSynthesis\n");
-		return;
-	}
-	//Initialize the Module
+	// Create a PXCSpeechSynthesis instance
+	PXCSpeechSynthesis *synth = 0;
+	pxcStatus sts = session->CreateImpl<PXCSpeechSynthesis>(&synth);
+
+	// Configure the module
 	PXCSpeechSynthesis::ProfileInfo pinfo;
-	tts->QueryProfile(0, &pinfo);
+	synth->QueryProfile(0, &pinfo);
 	pinfo.language = PXCSpeechSynthesis::LANGUAGE_US_ENGLISH;
-	sts = tts->SetProfile(&pinfo);
-	if (sts != pxcStatus::PXC_STATUS_NO_ERROR) {
-		wprintf_s(L"Failed to Initialize the Module\n");
+	sts = synth->SetProfile(&pinfo);
+	if (sts < PXC_STATUS_NO_ERROR) {
+		synth->Release();
 		return;
 	}
 
-	// Synthesize the text string
-	tts->BuildSentence(1, sentence);
-	// Retrieve the synthesized speech
-	int nbuffers = tts->QueryBufferNum(1);
-	for (int i = 0; i<nbuffers; i++) {
-		PXCAudio *audio = tts->QueryBuffer(1, i);
-		// send audio to the audio output device
-		VoiceOut vo(&pinfo);
-		vo.RenderAudio(audio);
+	synth->BuildSentence(1, sentence);
 
-		// Clean up
-		tts->ReleaseSentence(1);
+	// Render the sentence or write it to vo's internal memory buffer
+	VoiceOut vo(&pinfo);
+	int nbuffers = synth->QueryBufferNum(1);
+	for (int i = 0; i < nbuffers; i++) {
+		PXCAudio *sample = synth->QueryBuffer(1, i);
+		vo.RenderAudio(sample);
 	}
+
+	synth->Release();
+	return;
 }
 
 void BSSpeechSynthesis::start()

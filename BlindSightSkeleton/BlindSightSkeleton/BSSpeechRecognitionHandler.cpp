@@ -21,6 +21,8 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 		printConsole(L"Stop");
 		break;
 	case 2:
+		msg.sentence = L"The weather is sunny.";
+		speechSynthesis->pushQueue(msg);
 		printConsole(L"What is the weather");
 	default:
 		break;
