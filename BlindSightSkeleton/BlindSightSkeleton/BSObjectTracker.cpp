@@ -25,7 +25,7 @@ void BSObjectTracker::startTracking()
 	PXCSession* session = controller->session;
 
 	// Load the map file
-	pxcCHAR	file[1024] = L"C:\\Users\\Avery Liu\\Desktop\\RedPen.slam";
+	pxcCHAR	file[1024] = L"C:\\Users\\Avery Liu\\Desktop\\myPhone.slam";
 	g_targets.push_back(Model(file));
 
 	g_stop = false;
@@ -144,6 +144,9 @@ void ObjectTrackingPipeline()
 						msg.sentence = L"Items found.";
 						speechSynthesis->pushQueue(msg);
 						printConsole(L"Items found.");
+
+						// Sleep to avoid excessive output.
+						Sleep(2500);
 					}
 					else
 					{
