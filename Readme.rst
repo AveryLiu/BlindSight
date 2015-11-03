@@ -64,7 +64,7 @@ How to contribute features to BlindSight
 	   ...
 
 	   // Your init code
-	   newFeature = new BSNewFeature()
+	   newFeature = new BSNewFeature();
        }
 
    You've completed all the initialization work so far. To invoke your feature code, add the new commands in **BSController.cpp** 
@@ -79,7 +79,7 @@ How to contribute features to BlindSight
 	  // Don't forget to increase the array size
        }
 
-   and include **BSNewFeature.h" in **BSSpeechRecognitionHandler.cpp** and then
+   and include **BSNewFeature.h"** in **BSSpeechRecognitionHandler.cpp** and then
 
    .. code-block:: cpp
 
