@@ -46,13 +46,13 @@ How to contribute features to BlindSight
 	   // Your newly declared attribute below
 	   BSNewFeature* newFeature;
 
-	   // Note that the line above only declares a pointer to that project,
+	   // Note that the line above only declares a pointer to that object
 	   // It does not do any initialization work
 
 	   // Other original code below
 	   ...
        } 
-   Then initialize that object in **BSNewFeature.cpp**
+   Then initialize that object in **BSController.cpp**
 
    .. code-block:: cpp
 
@@ -75,16 +75,16 @@ How to contribute features to BlindSight
        {
           ...
 
-	  pxcCHAR \*cms[4] = {L'Wheres's my key', L'Stop', L'What is the weather', L'New command'};
+	  pxcCHAR *cmds[4] = {L'Where is my key', L'Stop', L'What is the weather', L'New command'};
 	  // Don't forget to increase the array size
        }
 
-   and include **BSNewFeature.h"** in **BSSpeechRecognitionHandler.cpp** and then
+   and include **BSNewFeature.h** in **BSSpeechRecognitionHandler.cpp** and then
 
    .. code-block:: cpp
 
        // Using the BSController to get your new feature object
-       BSNewFeature* newFeature = BSController->newFeature;
+       BSNewFeature* newFeature = controller->newFeature;
        swich(data->scores->label)
        {
        case 0:
