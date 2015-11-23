@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BSController.cpp" />
+    <ClCompile Include="BSDistanceDetector.cpp" />
     <ClCompile Include="BSFaceRecognitionHandler.cpp" />
     <ClCompile Include="BSObjectTracker.cpp" />
     <ClCompile Include="BSSpeechRecognitionHandler.cpp" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BSController.h" />
+    <ClInclude Include="BSDistanceDetector.h" />
     <ClInclude Include="BSFaceRecognitionHandler.h" />
     <ClInclude Include="BSObjectTracker.h" />
     <ClInclude Include="BSSpeechRecognitionHandler.h" />

@@ -88,6 +88,8 @@ DWORD WINAPI::synthesisThread()
 	BSController* controller = BSController::getInstance();
 	BSSpeechSynthesis* speechSynthesis = controller->speechSynthesis;
 	BSObjectTracker* objectTracker = controller->objectTracker;
+	BSFaceRecognitionHandler* faceRecognitionHandler = controller->faceRecognitionHandler;
+	BSDistanceDetector* distanceDetector = controller->distanceDetector;
 
 	while (true) {
 		BSSpeechSynthesis::OutputMessage msg = speechSynthesis->getItemFromQueue();
@@ -100,6 +102,9 @@ DWORD WINAPI::synthesisThread()
 				controller->releaseCamera();
 				// closing camera here
 				objectTracker->stopTracking();
+				faceRecognitionHandler->stopLearningFaces();
+				faceRecognitionHandler->stopRecognition();
+				distanceDetector->stop();
 				speechSynthesis->speakAloud(L"Camera closed.");
 			}
 			

@@ -3,6 +3,7 @@
 #include "BSSpeechRecognitionHandler.h"
 #include "BSSpeechSynthesis.h"
 #include "BSFaceRecognitionHandler.h"
+#include "BSDistanceDetector.h"
 #include <pxcspeechrecognition.h>
 #include <pxcsensemanager.h>
 #include <Windows.h>
@@ -35,6 +36,8 @@ public:
 	BSObjectTracker* objectTracker;
 	BSSpeechSynthesis* speechSynthesis;
 	BSFaceRecognitionHandler* faceRecognitionHandler;
+	BSDistanceDetector* distanceDetector;
+
 protected:
 	BSController();
 	~BSController();

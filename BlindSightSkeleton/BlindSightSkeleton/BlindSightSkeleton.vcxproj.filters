@@ -33,6 +33,9 @@
     <ClCompile Include="BSFaceRecognitionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BSDistanceDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BSObjectTracker.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BSFaceRecognitionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BSDistanceDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

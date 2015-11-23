@@ -3,6 +3,7 @@
 #include "BSController.h"
 #include "BSSpeechSynthesis.h"
 #include "BSFaceRecognitionHandler.h"
+#include "BSDistanceDetector.h"
 
 /* This handler runs in a seperated thread*/
 void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition::RecognitionData* data)
@@ -11,6 +12,8 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 	BSSpeechSynthesis* speechSynthesis = controller->speechSynthesis;
 	BSObjectTracker* objectTracker = controller->objectTracker;
 	BSFaceRecognitionHandler* faceRecognitionHandler = controller->faceRecognitionHandler;
+	BSDistanceDetector* distanceDetector = controller->distanceDetector;
+
 	BSSpeechSynthesis::OutputMessage msg;
 
 	switch (data->scores->label)
@@ -53,6 +56,17 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 			msg.sentence = L"Camera setting up, Learning Faces.";
 			// Setting up camera.
 			faceRecognitionHandler->startLearningFaces();
+		}
+		else {
+			msg.sentence = L"Camera occupied, please stop previous session first.";
+		}
+		speechSynthesis->pushQueue(msg);
+		break;
+	case 5:
+		if (controller->getCamera()) {
+			msg.sentence = L"Camera setting up, detecting distance.";
+			// Setting up camera.
+			distanceDetector->start();
 		}
 		else {
 			msg.sentence = L"Camera occupied, please stop previous session first.";
