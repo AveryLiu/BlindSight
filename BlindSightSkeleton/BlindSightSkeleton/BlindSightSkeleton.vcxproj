@@ -58,33 +58,41 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\..\..\..\Program Files (x86)\Intel\RSSDK\props\VS2010-13.Integration.MD.props" />
+    <Import Project="..\..\..\BSPropertySheet.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\..\..\..\Program Files (x86)\Intel\RSSDK\props\VS2010-13.Integration.MD.props" />
+    <Import Project="..\..\..\BSPropertySheet.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\..\..\..\Program Files (x86)\Intel\RSSDK\props\VS2010-13.Integration.MD.props" />
+    <Import Project="..\..\..\BSPropertySheet.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\..\..\..\Program Files (x86)\Intel\RSSDK\props\VS2010-13.Integration.MD.props" />
+    <Import Project="..\..\..\BSPropertySheet.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>$(OPENCV_DIR)\vc14\lib;$(OPENCV_DIR)\vc14\bin;C:\Tesseract-Build\lib\Win32;C:\Tesseract-Build\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\opencv\install\include\opencv2;C:\opencv\install\include;C:\Tesseract-Build\include\leptonica;C:\Tesseract-Build\include\tesseract;C:\Tesseract-Build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../common/lib/$(PlatformName)/$(PlatformToolset);../../lib/$(PlatformName);$(RSSDK_DIR)/lib/$(PlatformName);$(RSSDK_DIR)/sample/common/lib/$(PlatformName)/$(PlatformToolset);;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)\vc14\lib;$(OPENCV_DIR)\vc14\bin;C:\Tesseract-Build\lib\Win32;C:\Tesseract-Build\lib;../common/lib/$(PlatformName)/$(PlatformToolset);../../lib/$(PlatformName);$(RSSDK_DIR)/lib/$(PlatformName);$(RSSDK_DIR)/sample/common/lib/$(PlatformName)/$(PlatformToolset);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>libpxc_d.lib;libpxcutils_d.lib;oleaut32.lib;user32.lib;odbccp32.lib;ole32.lib;advapi32.lib;shell32.lib;winmm.lib;gdi32.lib;comdlg32.lib;uuid.lib;winspool.lib;odbc32.lib;kernel32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpxc_d.lib;libpxcutils_d.lib;oleaut32.lib;user32.lib;odbccp32.lib;ole32.lib;advapi32.lib;shell32.lib;winmm.lib;gdi32.lib;comdlg32.lib;uuid.lib;winspool.lib;odbc32.lib;kernel32.lib;opencv_core300.lib;opencv_features2d300.lib;opencv_flann300.lib;opencv_hal300.lib;opencv_highgui300.lib;opencv_imgcodecs300.lib;opencv_imgproc300.lib;opencv_ml300.lib;opencv_objdetect300.lib;opencv_photo300.lib;opencv_shape300.lib;opencv_stitching300.lib;opencv_superres300.lib;opencv_ts300.lib;opencv_video300.lib;opencv_videoio300.lib;opencv_videostab300.lib;opencv_calib3d300.lib;opencv_calib3d300d.lib;opencv_core300d.lib;opencv_features2d300d.lib;opencv_flann300d.lib;opencv_hal300d.lib;opencv_highgui300d.lib;opencv_imgcodecs300d.lib;opencv_imgproc300d.lib;opencv_ml300d.lib;opencv_objdetect300d.lib;opencv_photo300d.lib;opencv_shape300d.lib;opencv_stitching300d.lib;opencv_superres300d.lib;opencv_ts300d.lib;opencv_video300d.lib;opencv_videoio300d.lib;opencv_videostab300d.lib;libtesseract302.lib;libtesseract302d.lib;liblept168.lib;liblept168d.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -129,6 +137,7 @@
     <ClCompile Include="BSController.cpp" />
     <ClCompile Include="BSDistanceDetector.cpp" />
     <ClCompile Include="BSFaceRecognitionHandler.cpp" />
+    <ClCompile Include="BSImageSaver.cpp" />
     <ClCompile Include="BSObjectTracker.cpp" />
     <ClCompile Include="BSSpeechRecognitionHandler.cpp" />
     <ClCompile Include="BSSpeechSynthesis.cpp" />
@@ -138,6 +147,7 @@
     <ClInclude Include="BSController.h" />
     <ClInclude Include="BSDistanceDetector.h" />
     <ClInclude Include="BSFaceRecognitionHandler.h" />
+    <ClInclude Include="BSImageSaver.h" />
     <ClInclude Include="BSObjectTracker.h" />
     <ClInclude Include="BSSpeechRecognitionHandler.h" />
     <ClInclude Include="BSSpeechSynthesis.h" />

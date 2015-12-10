@@ -41,8 +41,8 @@ void BSController::initializeAudio()
 
 	// Set command and control
 	// TODO: load the commands from files.
-	pxcCHAR *cmds[10] = { L"Glasses, Where's my phone",L"Stop", L"Glasses, what is the weather", L"Glasses, recognize face", L"Glasses, meet person", L"Glasses£¬ activate distance detection", L"Glasses, what time is it", L"Glasses, where are you", L"Glasses, Where's my book", L"Glasses, Where's my wallet"};
-	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 10);
+	pxcCHAR *cmds[11] = { L"Glasses, Where's my phone",L"Stop", L"Glasses, what is the weather", L"Glasses, recognize face", L"Glasses, meet person", L"Glasses£¬ sense depth", L"Glasses, what time is it", L"Glasses, where are you", L"Glasses, Where's my book", L"Glasses, Where's my wallet", L"Glasses, read text"};
+	speechRecognition->BuildGrammarFromStringList(1, cmds, 0, 11);
 	speechRecognition->SetGrammar(1);
 }
 
@@ -110,6 +110,7 @@ BSController::BSController()
 	objectTracker = new BSObjectTracker();
 	faceRecognitionHandler = new BSFaceRecognitionHandler();
 	distanceDetector = new BSDistanceDetector();
+	imageSaver = new BSImageSaver();
 }
 
 BSController::~BSController()

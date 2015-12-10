@@ -2,14 +2,10 @@
 #include "BSObjectTracker.h"
 #include "BSController.h"
 #include "BSSpeechSynthesis.h"
-#include "pxcprojection.h"
 
 
 /* Threading control */
 volatile bool g_stop2 = true;
-
-/* Detection Threshold */
-int distance = 100000;
 
 BSDistanceDetector::BSDistanceDetector()
 {
@@ -34,6 +30,38 @@ void BSDistanceDetector::stop()
 	g_stop2 = true;
 }
 
+bool UnsafeScanForMinimumDistanceMillimetres(PXCImage::ImageData imageData,
+	int minimumDistanceMm,
+	long long length) {
+
+//	bool alert = false;
+	
+//	{
+	//	long long *ptr = (long long*)imageData.planes[0];
+
+	//	for (long long i = 0; ((i < length) && !alert); i++, ptr++)
+	//	{
+	//		alert = (*ptr > 0) && (*ptr < minimumDistanceMm);
+	//	}
+	//}
+	//return (alert);
+	bool alert = false;
+	int a = 0;
+	{
+		long long *ptr = (long long*)imageData.planes[0];
+
+		for (long long i = 0; ((i < length) && !alert); i++, ptr++)
+		{
+			
+			if ((*ptr > 0) && (*ptr < minimumDistanceMm)) a+=1;
+		}
+		a;
+		length;
+		if (a > 0.005 * length) alert = true;
+	}
+	return (alert);
+}
+
 void DistanceDetectorPipeline()
 {
 	//PXCTracker *pTracker;
@@ -42,6 +70,7 @@ void DistanceDetectorPipeline()
 
 	PXCSession* session = controller->session;
 	PXCSenseManager *senseMgr = session->CreateSenseManager();
+
 
 
 	if (!senseMgr)
@@ -61,83 +90,54 @@ void DistanceDetectorPipeline()
 
 	bool stsFlag = true;
 
-	/* Set Module */
-	/*sts = senseMgr->EnableTracker(); // is this necessary?
-	if (sts < PXC_STATUS_NO_ERROR)
+	if (senseMgr->EnableStream(PXCCapture::STREAM_TYPE_DEPTH, 640, 480) < 0) {
+		printConsole(L"Failed to enable stream.");
+	}
+	PXCCapture::Sample *sample = senseMgr->QuerySample();
+	if (sample == NULL)
 	{
-	printConsole(L"Failed to enable tracking module"); // and this
-	return;
-	} */
+		printConsole(L"Sample is null (might not be a problem)\n");
+		return;
+	}
 
-	senseMgr->EnableStream(PXCCapture::STREAM_TYPE_DEPTH, 320, 240, 30);
+	sts = senseMgr->Init();
 
-	if (senseMgr->Init() >= PXC_STATUS_NO_ERROR)
+	if (sts >= PXC_STATUS_NO_ERROR)
 	{
-		senseMgr->StreamFrames(true);
+		//senseMgr->StreamFrames(true);
 		printConsole(L"Streaming");
 
-		PXCProjection * projection = captureMgr->QueryDevice()->CreateProjection(); // of voor de init?
-		if (projection == NULL) {
-			printConsole(L"Unable to create a projection.");
-			return;
-		}
-
-		bool coordArrayCreated = false;
-		PXCPoint3DF32 *vertices = NULL;
-		while (!g_stop2) {
+		while (!g_stop2)
+		{
 			if (senseMgr->AcquireFrame(true) < PXC_STATUS_NO_ERROR)
 				break;
 
-			PXCCapture::Sample * sample = senseMgr->QuerySample();
-			if (sample == NULL) {
-				printConsole(L"Unable to obtain a sample.");
-				break;
+			sample = senseMgr->QuerySample();
+
+			PXCImage::ImageData *imageData = new PXCImage::ImageData;
+
+			sample->depth->AcquireAccess(PXCImage::Access::ACCESS_READ, PXCImage::PixelFormat::PIXEL_FORMAT_DEPTH, imageData);
+			int minimumDistance = 150; //mm
+			if (UnsafeScanForMinimumDistanceMillimetres(
+				*imageData,
+				minimumDistance, (100*10)))
+				//(long long)(sample->depth->QueryInfo().width * sample->depth->QueryInfo().height)))
+			{
+				printConsole(L"Saw something within 100mm of the camera, PANIC!");
+				BSSpeechSynthesis::OutputMessage msg;
+				msg.sentence = L"Warning! Object detected"; // not sure if this works, maybe function needed
+				speechSynthesis->pushQueue(msg);
+				Sleep(2500);
 			}
-
-			PXCImage * depthMap = sample->depth; // does this work?
-			if (depthMap == NULL) {
-				printConsole(L"Unable to obtain depth map.");
-				break;
+			else {
+				printConsole(L"Nothing detected");
 			}
-
-			PXCImage::ImageInfo dinfo = depthMap->QueryInfo(); // pointer?
-			int width = dinfo.width;
-			int height = dinfo.height;
-
-			if (!coordArrayCreated) {
-				// Assumption: width and height are obtained from resolution
-				vertices = new PXCPoint3DF32[width*height];
-				coordArrayCreated = true;
-			}
-
-			pxcStatus sts = projection->QueryVertices(depthMap, &vertices[0]);
-			if (sts < PXC_STATUS_NO_ERROR) {
-				printConsole(L"An error occured obtaining vertices from depth map.");
-				break;
-			}
-
-			// Find minimum distance
-			int minDist = 10000000;
-			for (int i = 0; i < width * height; i++) {
-				if (vertices[i].z < minDist) {
-					minDist = vertices[i].z;
-				}
-			}
-
-			printf("Minimum depth found = %d", minDist);
-
-			//if threshold of closest depth crossed, push message to queue
-			//sleep for a while after detection
 
 			senseMgr->ReleaseFrame();
-		}
-		if (vertices != NULL) {
-			delete vertices;
 		}
 	}
 	else
 	{
-		controller->releaseCamera();
 		printConsole(L"Init Failed");
 		stsFlag = false;
 	}

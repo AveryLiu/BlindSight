@@ -160,14 +160,14 @@ void recognitionPipeline()
 			pxcI32 nfaces = fdata->QueryNumberOfDetectedFaces();
 
 			if (nfaces > 0) {
-				for (int i = 0; i < nfaces; i++) {
-					if (fdata->QueryFaceByIndex(0)) {
-						fdata->QueryFaceByIndex(0)->QueryRecognition()->RegisterUser();
+			
+				if (fdata->QueryFaceByIndex(0)) {
+					fdata->QueryFaceByIndex(0)->QueryRecognition()->RegisterUser();
 
-						BSSpeechSynthesis::OutputMessage msg;
-						msg.sentence = L"Nice to meet you.";
-						speechSynthesis->pushQueue(msg);
-					}
+					BSSpeechSynthesis::OutputMessage msg;
+					msg.sentence = L"Nice to meet you.";
+					speechSynthesis->pushQueue(msg);
+					g_learning_stop = true;
 				}
 
 				// Save the database

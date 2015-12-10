@@ -24,6 +24,7 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 	BSObjectTracker* objectTracker = controller->objectTracker;
 	BSFaceRecognitionHandler* faceRecognitionHandler = controller->faceRecognitionHandler;
 	BSDistanceDetector* distanceDetector = controller->distanceDetector;
+	BSImageSaver* imageSaver = controller->imageSaver;
 
 	BSSpeechSynthesis::OutputMessage msg;
 
@@ -47,7 +48,7 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 		printConsole(L"Stop");
 		break;
 	case 2:
-		msg.sentence = L"The weather is sunny.";
+		msg.sentence = L"The temperature is thirty two degrees, variable clouds.";
 		speechSynthesis->pushQueue(msg);
 		printConsole(L"What is the weather");
 		break;
@@ -140,6 +141,17 @@ void PXCAPI BSSpeechRecognitionHandler::OnRecognition(const PXCSpeechRecognition
 			msg.sentence = L"Camera occupied, please stop previous session first.";
 		}
 		speechSynthesis->pushQueue(msg);
+		break;
+	}
+	case 10:
+	{
+		if (controller->tryGetCamera()) {
+			if (controller->getCamera()) {
+				msg.sentence = L"Camera setting up, reading text for you.";
+				imageSaver->start();
+				speechSynthesis->pushQueue(msg);
+			}
+		}
 		break;
 	}
 	default:

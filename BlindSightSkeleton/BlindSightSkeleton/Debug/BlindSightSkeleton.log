@@ -1,20 +1,22 @@
-﻿Build started 2015/10/1 23:18:34.
+﻿Build started 2015/10/1 19:18:36.
      1>Project "C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\BlindSightSkeleton\BlindSightSkeleton.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt BSController.cpp BSDistanceDetector.cpp BSFaceRecognitionHandler.cpp BSObjectTracker.cpp BSSpeechRecognitionHandler.cpp BSSpeechSynthesis.cpp main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /IC:\opencv\install\include\opencv2 /IC:\opencv\install\include /I"C:\Tesseract-Build\include\leptonica" /I"C:\Tesseract-Build\include\tesseract" /I"C:\Tesseract-Build\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt BSController.cpp BSDistanceDetector.cpp BSFaceRecognitionHandler.cpp BSImageSaver.cpp BSObjectTracker.cpp BSSpeechRecognitionHandler.cpp BSSpeechSynthesis.cpp main.cpp
          main.cpp
          BSSpeechSynthesis.cpp
-         BSFaceRecognitionHandler.cpp
          Generating Code...
          Skipping... (no relevant changes detected)
          BSSpeechRecognitionHandler.cpp
          BSObjectTracker.cpp
+         BSImageSaver.cpp
+         BSFaceRecognitionHandler.cpp
          BSDistanceDetector.cpp
          BSController.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\Debug\BlindSightSkeleton.exe" /INCREMENTAL /NOLOGO /LIBPATH:../common/lib/Win32/v140 /LIBPATH:../../lib/Win32 /LIBPATH:"C:\Program Files (x86)\Intel\RSSDK\/lib/Win32" /LIBPATH:"C:\Program Files (x86)\Intel\RSSDK\/sample/common/lib/Win32/v140" libpxc_d.lib libpxcutils_d.lib oleaut32.lib user32.lib odbccp32.lib ole32.lib advapi32.lib shell32.lib winmm.lib gdi32.lib comdlg32.lib uuid.lib winspool.lib odbc32.lib kernel32.lib comctl32.lib libpxcmd_d.lib libpxcutilsmd_d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:libcmt.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\Debug\BlindSightSkeleton.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\Debug\BlindSightSkeleton.lib" /MACHINE:X86 Debug\BSController.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\Debug\BlindSightSkeleton.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\opencv\install\x86\vc14\lib /LIBPATH:C:\opencv\install\x86\vc14\bin /LIBPATH:"C:\Tesseract-Build\lib\Win32" /LIBPATH:"C:\Tesseract-Build\lib" /LIBPATH:../common/lib/Win32/v140 /LIBPATH:../../lib/Win32 /LIBPATH:"C:\Program Files (x86)\Intel\RSSDK\/lib/Win32" /LIBPATH:"C:\Program Files (x86)\Intel\RSSDK\/sample/common/lib/Win32/v140" libpxc_d.lib libpxcutils_d.lib oleaut32.lib user32.lib odbccp32.lib ole32.lib advapi32.lib shell32.lib winmm.lib gdi32.lib comdlg32.lib uuid.lib winspool.lib odbc32.lib kernel32.lib opencv_core300.lib opencv_features2d300.lib opencv_flann300.lib opencv_hal300.lib opencv_highgui300.lib opencv_imgcodecs300.lib opencv_imgproc300.lib opencv_ml300.lib opencv_objdetect300.lib opencv_photo300.lib opencv_shape300.lib opencv_stitching300.lib opencv_superres300.lib opencv_ts300.lib opencv_video300.lib opencv_videoio300.lib opencv_videostab300.lib opencv_calib3d300.lib opencv_calib3d300d.lib opencv_core300d.lib opencv_features2d300d.lib opencv_flann300d.lib opencv_hal300d.lib opencv_highgui300d.lib opencv_imgcodecs300d.lib opencv_imgproc300d.lib opencv_ml300d.lib opencv_objdetect300d.lib opencv_photo300d.lib opencv_shape300d.lib opencv_stitching300d.lib opencv_superres300d.lib opencv_ts300d.lib opencv_video300d.lib opencv_videoio300d.lib opencv_videostab300d.lib libtesseract302.lib libtesseract302d.lib liblept168.lib liblept168d.lib comctl32.lib libpxcmd_d.lib libpxcutilsmd_d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:libcmt.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\Debug\BlindSightSkeleton.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Avery Liu\Desktop\IntegratedBlindSight\BlindSightSkeleton\Debug\BlindSightSkeleton.lib" /MACHINE:X86 Debug\BSController.obj
          Debug\BSDistanceDetector.obj
          Debug\BSFaceRecognitionHandler.obj
+         Debug\BSImageSaver.obj
          Debug\BSObjectTracker.obj
          Debug\BSSpeechRecognitionHandler.obj
          Debug\BSSpeechSynthesis.obj
@@ -24,4 +26,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.31
+Time Elapsed 00:00:02.04

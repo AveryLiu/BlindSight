@@ -4,6 +4,7 @@
 #include "BSSpeechSynthesis.h"
 #include "BSFaceRecognitionHandler.h"
 #include "BSDistanceDetector.h"
+#include "BSImageSaver.h"
 #include <pxcspeechrecognition.h>
 #include <pxcsensemanager.h>
 #include <Windows.h>
@@ -37,6 +38,7 @@ public:
 	BSSpeechSynthesis* speechSynthesis;
 	BSFaceRecognitionHandler* faceRecognitionHandler;
 	BSDistanceDetector* distanceDetector;
+	BSImageSaver* imageSaver;
 
 protected:
 	BSController();
